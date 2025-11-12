@@ -135,7 +135,12 @@ function snippets.push_console_msg(name, msg, col)
 end
 
 snippets.register_on_log(function(snippet, level, msg)
-    local owner = snippets.registered_snippets[snippet].owner
+    local def = snippets.registered_snippets[snippet]
+    if not def then
+        -- if snippet was not saved, it has no definition stored
+        return
+    end
+    local owner = def.owner
     local form = forms[owner]
     if not owner or not form or not form.context.text or
             not form:is_open() then
